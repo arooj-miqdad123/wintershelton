@@ -8,22 +8,20 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copy the .csproj file and restore dependencies
-# NOTE: Agar aapke project ka naam 'AuraMist.csproj' hai tou niche wahi naam likhein
-COPY ["AuraMist/AuraMist.csproj", "AuraMist/"]
-RUN dotnet restore "AuraMist/AuraMist.csproj"
+# Copy the .csproj file from root and restore
+COPY ["WinterSheltonHouse.csproj", "./"]
+RUN dotnet restore "WinterSheltonHouse.csproj"
 
-# Copy the rest of the code and build
+# Copy everything else
 COPY . .
-WORKDIR "/src/AuraMist"
-RUN dotnet build "AuraMist.csproj" -c Release -o /app/build
+RUN dotnet build "WinterSheltonHouse.csproj" -c Release -o /app/build
 
 # Publish the app
 FROM build AS publish
-RUN dotnet publish "AuraMist.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "WinterSheltonHouse.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Final stage: copy published files and set entrypoint
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AuraMist.dll"]
+ENTRYPOINT ["dotnet", "WinterSheltonHouse.dll"]
