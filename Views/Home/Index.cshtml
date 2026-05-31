@@ -1,0 +1,149 @@
+@model List<WinterSheltonHouse.Models.Product>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-snowflakes">
+            <i class="fas fa-snowflake sf1"></i>
+            <i class="fas fa-snowflake sf2"></i>
+            <i class="fas fa-snowflake sf3"></i>
+            <i class="fas fa-snowflake sf4"></i>
+        </div>
+        <span class="hero-tag">❄️ New Season, New Style</span>
+        <h1 class="hero-title">
+            Stay Warm,<br>
+            <span class="highlight">Stay Stylish</span>
+        </h1>
+        <p class="hero-subtitle">Pakistan's Premium Winter Collection — Sweaters, Jackets, Gloves & Socks</p>
+        <div class="hero-btns">
+            <a href="/Home/Products" class="btn-primary">
+                <i class="fas fa-shopping-bag"></i> Shop Now
+            </a>
+            <a href="/Home/Products?category=Jackets" class="btn-outline">
+                <i class="fas fa-fire"></i> Top Jackets
+            </a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <div class="hero-circle">
+            <i class="fas fa-snowflake giant-flake"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Category Boxes -->
+<section class="categories section">
+    <div class="container">
+        <h2 class="section-title">Our Collections</h2>
+        <div class="category-grid">
+            <a href="/Home/Products?category=Sweaters" class="cat-card sweater-card">
+                <div class="cat-icon"><i class="fas fa-tshirt"></i></div>
+                <h3>Sweaters</h3>
+                <p>Pure wool and cashmere blend</p>
+                <span class="cat-link">Browse <i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="/Home/Products?category=Jackets" class="cat-card jacket-card">
+                <div class="cat-icon"><i class="fas fa-user-tie"></i></div>
+                <h3>Jackets</h3>
+                <p>Heavy winter and puffer jackets</p>
+                <span class="cat-link">Browse <i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="/Home/Products?category=Gloves" class="cat-card gloves-card">
+                <div class="cat-icon"><i class="fas fa-hand-paper"></i></div>
+                <h3>Gloves</h3>
+                <p>Woolen and leather gloves</p>
+                <span class="cat-link">Browse <i class="fas fa-arrow-right"></i></span>
+            </a>
+            <a href="/Home/Products?category=Socks" class="cat-card socks-card">
+                <div class="cat-icon"><i class="fas fa-socks"></i></div>
+                <h3>Socks</h3>
+                <p>Thermal and cashmere socks</p>
+                <span class="cat-link">Browse <i class="fas fa-arrow-right"></i></span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="featured section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Featured Products</h2>
+            <a href="/Home/Products" class="see-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="products-grid">
+            @foreach (var product in Model)
+            {
+                <div class="product-card">
+                    <div class="product-img-wrap">
+                        <img src="@product.ImageUrl" alt="@product.Name" onerror="this.src='/images/placeholder.jpg'" />
+                        <span class="product-cat-badge">@product.Category</span>
+                        @if (product.Stock < 10)
+                        {
+                            <span class="low-stock-badge">Only @product.Stock left!</span>
+                        }
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">@product.Name</h3>
+                        <p class="product-desc">@product.Description.Substring(0, Math.Min(60, product.Description.Length))...</p>
+                        <div class="product-footer">
+                            <span class="price">Rs. @product.Price.ToString("N0")</span>
+                            <div class="product-actions">
+                                <a href="/Home/ProductDetail/@product.Id" class="btn-view">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <input type="hidden" name="qty" value="1" />
+                                    <button type="submit" class="btn-cart">
+                                        <i class="fas fa-shopping-bag"></i> Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Features Banner -->
+<section class="features-banner">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-item">
+                <i class="fas fa-truck"></i>
+                <div>
+                    <h4>Free Delivery</h4>
+                    <p>On orders above Rs.5000 across Pakistan</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-undo"></i>
+                <div>
+                    <h4>Easy Returns</h4>
+                    <p>7-day return policy</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-shield-alt"></i>
+                <div>
+                    <h4>Secure Payment</h4>
+                    <p>COD and Card both available</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-headset"></i>
+                <div>
+                    <h4>24/7 Support</h4>
+                    <p>Always here to help you</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

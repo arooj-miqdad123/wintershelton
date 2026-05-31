@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin | Winter Shelton House</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+</head>
+<body class="admin-body">
+
+<div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-snowflake"></i>
+            <div>
+                <span class="sidebar-title">Winter Shelton</span>
+                <span class="sidebar-sub">Admin Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="/Admin/Dashboard/Index" class="sidebar-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <div class="sidebar-section">Products</div>
+            <a href="/Admin/Dashboard/Products" class="sidebar-link">
+                <i class="fas fa-boxes"></i> All Products
+            </a>
+            <a href="/Admin/Dashboard/CreateProduct" class="sidebar-link">
+                <i class="fas fa-plus-circle"></i> Add Product
+            </a>
+            <div class="sidebar-section">Orders</div>
+            <a href="/Admin/Dashboard/Orders" class="sidebar-link">
+                <i class="fas fa-clipboard-list"></i> All Orders
+            </a>
+            <a href="/Admin/Dashboard/Orders?status=Pending" class="sidebar-link">
+                <i class="fas fa-clock"></i> Pending Orders
+            </a>
+            <div class="sidebar-section">Users</div>
+            <a href="/Admin/Dashboard/Customers" class="sidebar-link">
+                <i class="fas fa-users"></i> Customers
+            </a>
+            <div class="sidebar-section">Site</div>
+            <a href="/" class="sidebar-link">
+                <i class="fas fa-store"></i> Website Dekho
+            </a>
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="sidebar-link logout-link">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div class="admin-topbar-left">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2>@ViewData["Title"]</h2>
+            </div>
+            <div class="admin-topbar-right">
+                <span class="admin-user">
+                    <i class="fas fa-user-shield"></i>
+                    @User.Identity?.Name?.Split('@')[0]
+                </span>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> @TempData["Success"]
+                    <button onclick="this.parentElement.remove()">×</button>
+                </div>
+            }
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleSidebar() {
+    document.querySelector('.admin-sidebar').classList.toggle('collapsed');
+}
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

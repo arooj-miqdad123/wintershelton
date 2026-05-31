@@ -1,0 +1,63 @@
+@model List<WinterSheltonHouse.Models.Order>
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-section-header">
+    <h2>Orders</h2>
+    <div class="filter-tabs">
+        <a href="/Admin/Dashboard/Orders" class="filter-tab @(string.IsNullOrEmpty(ViewBag.Status?.ToString()) ? "active" : "")">All</a>
+        <a href="/Admin/Dashboard/Orders?status=Pending" class="filter-tab @(ViewBag.Status == "Pending" ? "active" : "")">Pending</a>
+        <a href="/Admin/Dashboard/Orders?status=Processing" class="filter-tab @(ViewBag.Status == "Processing" ? "active" : "")">Processing</a>
+        <a href="/Admin/Dashboard/Orders?status=Shipped" class="filter-tab @(ViewBag.Status == "Shipped" ? "active" : "")">Shipped</a>
+        <a href="/Admin/Dashboard/Orders?status=Delivered" class="filter-tab @(ViewBag.Status == "Delivered" ? "active" : "")">Delivered</a>
+    </div>
+</div>
+
+<div class="table-wrap">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>City</th>
+                <th>Status</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model)
+            {
+                <tr>
+                    <td><strong>#@o.Id</strong></td>
+                    <td>@o.User?.FullName<br/><small>@o.User?.Email</small></td>
+                    <td>@o.OrderDate.ToString("dd/MM/yy HH:mm")</td>
+                    <td>Rs. @o.TotalAmount.ToString("N0")</td>
+                    <td>
+                        @if (o.PaymentMethod == WinterSheltonHouse.Models.PaymentMethod.CashOnDelivery)
+                        {
+                            <span class="badge-sm cod-sm">COD</span>
+                        }
+                        else
+                        {
+                            <span class="badge-sm card-sm">Card ***@o.CardLastFour</span>
+                        }
+                    </td>
+                    <td>@o.ShippingCity</td>
+                    <td>
+                        <span class="status-badge status-@o.Status.ToString().ToLower()">@o.Status</span>
+                    </td>
+                    <td>
+                        <a href="/Admin/Dashboard/OrderDetail/@o.Id" class="action-link">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

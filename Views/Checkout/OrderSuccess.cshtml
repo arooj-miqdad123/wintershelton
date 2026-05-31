@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Order Successful";
+}
+
+<div class="success-page">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Order Placed Successfully!</h1>
+        <p class="order-num">Order #<strong>@ViewBag.OrderId</strong></p>
+        <p>Thank you! Your order has been received.</p>
+
+        @if (ViewBag.PaymentMethod?.ToString() == "CashOnDelivery")
+        {
+            <div class="payment-confirmed cod">
+                <i class="fas fa-money-bill-wave"></i>
+                <strong>Cash on Delivery</strong>
+                <span>Pay when your order arrives</span>
+            </div>
+        }
+        else
+        {
+            <div class="payment-confirmed card">
+                <i class="fas fa-credit-card"></i>
+                <strong>Card Payment</strong>
+                <span>Payment is being processed</span>
+            </div>
+        }
+
+        <div class="success-actions">
+            <a href="/Checkout/MyOrders" class="btn-primary">
+                <i class="fas fa-box"></i> View My Orders
+            </a>
+            <a href="/" class="btn-outline">
+                <i class="fas fa-home"></i> Go to Home
+            </a>
+        </div>
+    </div>
+</div>

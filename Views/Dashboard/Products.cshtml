@@ -1,0 +1,70 @@
+@model List<WinterSheltonHouse.Models.Product>
+@{
+    ViewData["Title"] = "Products";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-section-header">
+    <h2>All Products</h2>
+    <a href="/Admin/Dashboard/CreateProduct" class="btn-admin-primary">
+        <i class="fas fa-plus"></i> New Product
+    </a>
+</div>
+
+<div class="table-wrap">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr class="@(!p.IsActive ? "inactive-row" : "")">
+                    <td>#@p.Id</td>
+                    <td>
+                        <img src="@p.ImageUrl" alt="@p.Name" class="table-img"
+                             onerror="this.src='/images/placeholder.jpg'" />
+                    </td>
+                    <td><strong>@p.Name</strong></td>
+                    <td><span class="cat-tag">@p.Category</span></td>
+                    <td>Rs. @p.Price.ToString("N0")</td>
+                    <td>
+                        <span class="@(p.Stock < 5 ? "stock-low" : "stock-ok")">@p.Stock</span>
+                    </td>
+                    <td>
+                        @if (p.IsActive)
+                        {
+                            <span class="badge-sm active-sm">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge-sm inactive-sm">Inactive</span>
+                        }
+                    </td>
+                    <td class="action-btns">
+                        <a href="/Admin/Dashboard/EditProduct/@p.Id" class="btn-edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form asp-action="DeleteProduct" method="post" style="display:inline"
+                              onsubmit="return confirm('@p.Name delete?')">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@p.Id" />
+                            <button type="submit" class="btn-delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

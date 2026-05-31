@@ -1,0 +1,81 @@
+@model WinterSheltonHouse.Models.Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="/">Home</a> <i class="fas fa-chevron-right"></i>
+        <a href="/Home/Products">Products</a> <i class="fas fa-chevron-right"></i>
+        <a href="/Home/Products?category=@Model.Category">@Model.Category</a> <i class="fas fa-chevron-right"></i>
+        <span>@Model.Name</span>
+    </div>
+
+    <div class="product-detail">
+        <div class="product-gallery">
+            <img src="@Model.ImageUrl" alt="@Model.Name" class="main-image" onerror="this.src='/images/placeholder.jpg'" />
+        </div>
+
+        <div class="product-detail-info">
+            <span class="detail-category"><i class="fas fa-tag"></i> @Model.Category</span>
+            <h1 class="detail-title">@Model.Name</h1>
+            <div class="detail-price">Rs. @Model.Price.ToString("N0")</div>
+
+            <div class="detail-stock">
+                @if (Model.Stock > 0)
+                {
+                    <span class="in-stock"><i class="fas fa-check-circle"></i> In Stock (@Model.Stock remaining)</span>
+                }
+                else
+                {
+                    <span class="out-stock"><i class="fas fa-times-circle"></i> Out of Stock</span>
+                }
+            </div>
+
+            <div class="detail-description">
+                <h3>Product Details</h3>
+                <p>@Model.Description</p>
+            </div>
+
+            @if (Model.Stock > 0)
+            {
+                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="add-to-cart-form">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <div class="qty-selector">
+                        <label>Quantity:</label>
+                        <div class="qty-control">
+                            <button type="button" onclick="changeQty(-1)">-</button>
+                            <input type="number" name="qty" id="qty" value="1" min="1" max="@Model.Stock" />
+                            <button type="button" onclick="changeQty(1)">+</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-add-cart">
+                        <i class="fas fa-shopping-bag"></i> Add to Cart
+                    </button>
+                    <a href="/Checkout" class="btn-buy-now">
+                        <i class="fas fa-bolt"></i> Buy Now
+                    </a>
+                </form>
+            }
+
+            <div class="detail-features">
+                <div class="df-item"><i class="fas fa-truck"></i> Free delivery on Rs.5000+</div>
+                <div class="df-item"><i class="fas fa-undo"></i> 7-day return policy</div>
+                <div class="df-item"><i class="fas fa-shield-alt"></i> 100% original product</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function changeQty(delta) {
+    var input = document.getElementById('qty');
+    var val = parseInt(input.value) + delta;
+    var max = parseInt(input.max);
+    if (val < 1) val = 1;
+    if (val > max) val = max;
+    input.value = val;
+}
+</script>
+}

@@ -1,0 +1,28 @@
+@model IList<WinterSheltonHouse.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Customers";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-section-header">
+    <h2>Customers (@Model.Count)</h2>
+</div>
+
+<div class="table-wrap">
+    <table class="admin-table">
+        <thead>
+            <tr><th>Name</th><th>Email</th><th>City</th><th>Registered</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td><strong>@u.FullName</strong></td>
+                    <td>@u.Email</td>
+                    <td>@(string.IsNullOrEmpty(u.City) ? "-" : u.City)</td>
+                    <td>@u.CreatedAt.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

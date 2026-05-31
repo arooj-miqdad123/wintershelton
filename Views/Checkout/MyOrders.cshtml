@@ -1,0 +1,62 @@
+@model List<WinterSheltonHouse.Models.Order>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-box"></i> My Orders</h1>
+    </div>
+</div>
+
+<div class="container">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No orders yet</h3>
+            <a href="/Home/Products" class="btn-primary">Start Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="orders-table-wrap">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td><strong>#@order.Id</strong></td>
+                            <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                            <td>Rs. @order.TotalAmount.ToString("N0")</td>
+                            <td>
+                                @if (order.PaymentMethod == WinterSheltonHouse.Models.PaymentMethod.CashOnDelivery)
+                                {
+                                    <span class="badge cod-badge"><i class="fas fa-money-bill-wave"></i> COD</span>
+                                }
+                                else
+                                {
+                                    <span class="badge card-badge"><i class="fas fa-credit-card"></i> Card ***@order.CardLastFour</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="status-badge status-@order.Status.ToString().ToLower()">
+                                    @order.Status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

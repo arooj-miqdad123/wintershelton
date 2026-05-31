@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Order Detail";
+    Layout = "_AdminLayout";
+    var order = ViewBag.Order as WinterSheltonHouse.Models.Order;
+}
+
+@if (order == null)
+{
+    <p>Order not found.</p>
+}
+else
+{
+    <div class="admin-section-header">
+        <h2>Order #@order.Id</h2>
+        <a href="/Admin/Dashboard/Orders" class="btn-back-admin"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="order-detail-grid">
+        <div class="order-detail-card">
+            <h3><i class="fas fa-user"></i> Customer</h3>
+            <p><strong>Name:</strong> @order.User?.FullName</p>
+            <p><strong>Email:</strong> @order.User?.Email</p>
+            <p><strong>Phone:</strong> @order.ShippingPhone</p>
+        </div>
+        <div class="order-detail-card">
+            <h3><i class="fas fa-map-marker-alt"></i> Delivery</h3>
+            <p><strong>Address:</strong> @order.ShippingAddress</p>
+            <p><strong>City:</strong> @order.ShippingCity</p>
+        </div>
+        <div class="order-detail-card">
+            <h3><i class="fas fa-credit-card"></i> Payment</h3>
+            <p><strong>Method:</strong> @order.PaymentMethod</p>
+            @if (order.CardLastFour != null)
+            {
+                <p><strong>Card:</strong> ****@order.CardLastFour</p>
+            }
+            <p><strong>Total:</strong> Rs. @order.TotalAmount.ToString("N0")</p>
+        </div>
+        <div class="order-detail-card">
+            <h3><i class="fas fa-cog"></i> Update Status</h3>
+            <form asp-action="UpdateOrderStatus" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@order.Id" />
+                <select name="status" class="form-control">
+                    @foreach (var status in Enum.GetValues<WinterSheltonHouse.Models.OrderStatus>())
+                    {
+                        <option value="@status" selected="@(order.Status == status)">@status</option>
+                    }
+                </select>
+                <button type="submit" class="btn-admin-primary" style="margin-top:8px">
+                    <i class="fas fa-save"></i> Update
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-section" style="margin-top:24px">
+        <h3>Order Items</h3>
+        <table class="admin-table">
+            <thead>
+                <tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in order.Items)
+                {
+                    <tr>
+                        <td>@item.Product?.Name</td>
+                        <td>Rs. @item.UnitPrice.ToString("N0")</td>
+                        <td>@item.Quantity</td>
+                        <td>Rs. @((item.UnitPrice * item.Quantity).ToString("N0"))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

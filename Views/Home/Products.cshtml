@@ -1,0 +1,100 @@
+@model List<WinterSheltonHouse.Models.Product>
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1>@(ViewBag.Category ?? "Tamam Products")</h1>
+        <p>Garmai aur style ka behtareen combination</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="shop-layout">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <div class="filter-card">
+                <h3><i class="fas fa-filter"></i> Categories</h3>
+                <ul class="filter-list">
+                    <li><a href="/Home/Products" class="@(string.IsNullOrEmpty(ViewBag.Category?.ToString()) ? "active" : "")">
+                        <i class="fas fa-th"></i> All Products
+                    </a></li>
+                    <li><a href="/Home/Products?category=Sweaters" class="@(ViewBag.Category == "Sweaters" ? "active" : "")">
+                        <i class="fas fa-tshirt"></i> Sweaters
+                    </a></li>
+                    <li><a href="/Home/Products?category=Jackets" class="@(ViewBag.Category == "Jackets" ? "active" : "")">
+                        <i class="fas fa-user-tie"></i> Jackets
+                    </a></li>
+                    <li><a href="/Home/Products?category=Gloves" class="@(ViewBag.Category == "Gloves" ? "active" : "")">
+                        <i class="fas fa-hand-paper"></i> Gloves
+                    </a></li>
+                    <li><a href="/Home/Products?category=Socks" class="@(ViewBag.Category == "Socks" ? "active" : "")">
+                        <i class="fas fa-socks"></i> Socks
+                    </a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Products Area -->
+        <div class="products-area">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <span>@Model.Count products mile</span>
+                <form method="get" action="/Home/Products" class="sort-form">
+                    <input type="hidden" name="category" value="@ViewBag.Category" />
+                    <input type="hidden" name="search" value="@ViewBag.Search" />
+                    <select name="sort" onchange="this.form.submit()" class="sort-select">
+                        <option value="">Default</option>
+                        <option value="price_asc" selected="@(ViewBag.Sort == "price_asc")">Price: Kam se Zyada</option>
+                        <option value="price_desc" selected="@(ViewBag.Sort == "price_desc")">Price: Zyada se Kam</option>
+                        <option value="newest" selected="@(ViewBag.Sort == "newest")">Nayi Arrivals</option>
+                    </select>
+                </form>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h3>Koi product nahi mila</h3>
+                    <p>Apni search change kar ke dekhein</p>
+                    <a href="/Home/Products" class="btn-primary">Tamam Products Dekho</a>
+                </div>
+            }
+            else
+            {
+                <div class="products-grid">
+                    @foreach (var product in Model)
+                    {
+                        <div class="product-card">
+                            <div class="product-img-wrap">
+                                <img src="@product.ImageUrl" alt="@product.Name" onerror="this.src='/images/placeholder.jpg'" />
+                                <span class="product-cat-badge">@product.Category</span>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-name">@product.Name</h3>
+                                <p class="product-desc">@(product.Description.Length > 55 ? product.Description.Substring(0, 55) + "..." : product.Description)</p>
+                                <div class="product-footer">
+                                    <span class="price">Rs. @product.Price.ToString("N0")</span>
+                                    <div class="product-actions">
+                                        <a href="/Home/ProductDetail/@product.Id" class="btn-view">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline">
+                                            <input type="hidden" name="productId" value="@product.Id" />
+                                            <input type="hidden" name="qty" value="1" />
+                                            <button type="submit" class="btn-cart">
+                                                <i class="fas fa-bag-shopping"></i> Cart
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

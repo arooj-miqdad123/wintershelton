@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Winter Shelton House</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+    <div class="container">
+        <span><i class="fas fa-truck"></i> Free delivery on Rs.5000+</span>
+        <span><i class="fas fa-phone"></i> 0300-1234567</span>
+        <span><i class="fas fa-envelope"></i> info@wintershelton.com</span>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="main-header">
+    <div class="container header-inner">
+        <a href="/" class="brand">
+            <div class="brand-logo">
+                <i class="fas fa-snowflake"></i>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">Winter Shelton</span>
+                <span class="brand-tagline">House of Warmth</span>
+            </div>
+        </a>
+
+        <!-- Search -->
+        <form action="/Home/Products" method="get" class="search-form">
+            <input type="text" name="search" placeholder="What are you looking for..." value="@ViewBag.Search" />
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="dropdown user-menu">
+                    <button class="icon-btn dropdown-toggle">
+                        <i class="fas fa-user-circle"></i>
+                        <span>@User.Identity.Name?.Split('@')[0]</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a href="/Admin/Dashboard/Index"><i class="fas fa-tachometer-alt"></i> Admin Panel</a>
+                        }
+                        <a href="/Checkout/MyOrders"><i class="fas fa-box"></i> My Orders</a>
+                        <a href="/Account/Profile"><i class="fas fa-user"></i> Profile</a>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                            <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a href="/Account/Login" class="icon-btn">
+                    <i class="fas fa-user"></i>
+                    <span>Login</span>
+                </a>
+            }
+            <a href="/Cart" class="icon-btn cart-btn">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Cart</span>
+                <span class="cart-badge" id="cartCount">0</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/Home/Products" class="nav-link">All Products</a></li>
+                <li><a href="/Home/Products?category=Sweaters" class="nav-link"><i class="fas fa-tshirt"></i> Sweaters</a></li>
+                <li><a href="/Home/Products?category=Jackets" class="nav-link"><i class="fas fa-user-tie"></i> Jackets</a></li>
+                <li><a href="/Home/Products?category=Gloves" class="nav-link"><i class="fas fa-hand-paper"></i> Gloves</a></li>
+                <li><a href="/Home/Products?category=Socks" class="nav-link"><i class="fas fa-socks"></i> Socks</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button onclick="this.parentElement.remove()">×</button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button onclick="this.parentElement.remove()">×</button>
+        </div>
+    }
+
+    @RenderBody()
+</main>
+
+<!-- Footer -->
+<footer class="main-footer">
+    <div class="footer-snow">
+        @for (int i = 0; i < 20; i++)
+        {
+            <span class="snowflake"><i class="fas fa-snowflake"></i></span>
+        }
+    </div>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3><i class="fas fa-snowflake"></i> Winter Shelton House</h3>
+                <p>Pakistan ka sabse trusted winter clothing brand. Garmai, style aur quality — sab ek jagah.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/Home/Products?category=Sweaters">Sweaters</a></li>
+                    <li><a href="/Home/Products?category=Jackets">Jackets</a></li>
+                    <li><a href="/Home/Products?category=Gloves">Gloves</a></li>
+                    <li><a href="/Home/Products?category=Socks">Socks</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="/Home/About">Hamare Baare Mein</a></li>
+                    <li><a href="/Checkout/MyOrders">My Orders</a></li>
+                    <li><a href="/Account/Login">Login / Register</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Payment Methods</h4>
+                <div class="payment-icons">
+                    <span class="pay-icon"><i class="fas fa-money-bill-wave"></i> Cash on Delivery</span>
+                    <span class="pay-icon"><i class="fas fa-credit-card"></i> Credit Card</span>
+                    <span class="pay-icon"><i class="fas fa-shield-alt"></i> 100% Secure</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Winter Shelton House. Tamam Huqooq Mehfooz Hain.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="~/js/site.js"></script>
+<script>
+    // Cart count update
+    fetch('/Cart/Count').then(r => r.json()).then(d => {
+        document.getElementById('cartCount').textContent = d.count;
+        if (d.count > 0) document.getElementById('cartCount').style.display = 'flex';
+    }).catch(() => {});
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

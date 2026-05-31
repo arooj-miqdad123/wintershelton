@@ -1,0 +1,51 @@
+@model WinterSheltonHouse.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="fas fa-snowflake auth-icon"></i>
+            <h2>Create New Account</h2>
+            <p>Join the Winter Shelton House family</p>
+        </div>
+
+        <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="validation-error"></div>
+
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input asp-for="FullName" class="form-control" placeholder="Ali Ahmed" />
+                <span asp-validation-for="FullName" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input asp-for="Email" class="form-control" placeholder="email@example.com" />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input asp-for="Password" class="form-control" placeholder="Minimum 6 characters" type="password" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Confirm Password</label>
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Re-enter password" type="password" />
+                <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+            </div>
+
+            <button type="submit" class="btn-auth">
+                <i class="fas fa-user-plus"></i> Register
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="/Account/Login">Login</a></p>
+        </div>
+    </div>
+</div>
